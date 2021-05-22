@@ -1,0 +1,17 @@
+.element__like-icon {
+  margin-left: 5px;
+  min-height: 19px;
+  width: 22px;
+  background-image: url('../../../images/hearth-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.5s linear 0s;
+}
+
+.element__like-icon:hover {
+  opacity: .5;
+}
