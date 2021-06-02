@@ -29,10 +29,10 @@ class Api {
     return this._genericMethod('cards', 'GET');
   }
 
-  editUserInfo(name, about){
+  editUserInfo(data){
     const body = JSON.stringify({
-      name: name,
-      about: about
+      name: data.name,
+      about: data.about
     });
     return this._genericMethod('users/me', 'PATCH', body);
   }
@@ -49,17 +49,13 @@ class Api {
     return this._genericMethod(`cards/${idCard}`, 'DELETE');
   }
 
-  unlikeCard(idCard){
-    return this._genericMethod(`cards/likes/${idCard}`, 'DELETE');
+  changeLikeCardStatus(idCard, isLike){
+    return this._genericMethod(`cards/likes/${idCard}`, isLike ? 'PUT' : 'DELETE');
   }
 
-  likeCard(idCard){
-    return this._genericMethod(`cards/likes/${idCard}`, 'PUT');
-  }
-
-  editAvatar(avatar){
+  editAvatar(data){
     const body = JSON.stringify({
-      avatar: avatar
+      avatar: data.avatar
     });
     return this._genericMethod('users/me/avatar', 'PATCH', body);
   }
