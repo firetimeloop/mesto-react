@@ -6,7 +6,7 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import Api from '../utils/api';
+import {api, Api} from '../utils/api';
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -22,12 +22,12 @@ function App(props){
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    Api.getUserInfo()
+    api.getUserInfo()
     .then(userInfo => setCurrentUser(userInfo))
     .catch((err) => {
       console.log(err);
     });
-    Api.getInitialCards()
+    api.getInitialCards()
     .then(cardsInfo => setCards([...cardsInfo]))
     .catch((err) => {
       console.log(err);
@@ -55,7 +55,7 @@ function App(props){
     setSelectedCard({});
   };
   function handleUpdateUser(name, about){
-    Api.editUserInfo(name, about)
+    api.editUserInfo(name, about)
     .then(userInfo => {
       setCurrentUser(userInfo);
       closeAllPopups();
@@ -65,7 +65,7 @@ function App(props){
     });
   };
   function handleUpdateAvatar(avatar) {
-    Api.editAvatar(avatar)
+    api.editAvatar(avatar)
     .then(userInfo => {
       setCurrentUser(userInfo);
       closeAllPopups();
@@ -75,18 +75,18 @@ function App(props){
     });
   }; 
   function handleCardDelete(card) {
-    Api.deleteCard(card._id).then((deletedCard) => {
+    api.deleteCard(card._id).then((deletedCard) => {
       setCards(cards.filter((c) => c._id !== card._id));
     });
   } 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    Api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     });
   } 
   function handleAddPlaceSubmit(data) {
-    Api.postCard(data.name, data.link)
+    api.postCard(data.name, data.link)
     .then(newCard => {
       setCards([newCard, ...cards]);
       closeAllPopups();
