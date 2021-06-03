@@ -22,38 +22,41 @@ function App(props){
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
+    Promise.all([
     api.getUserInfo()
     .then(userInfo => setCurrentUser(userInfo))
     .catch((err) => {
       console.log(err);
-    });
+    }),
     api.getInitialCards()
     .then(cardsInfo => setCards([...cardsInfo]))
     .catch((err) => {
+      console.log(err);
+    })]).catch((err) => {
       console.log(err);
     });
   }, [])
 
   function handleEditAvatarClick() {
     setEditAvatarPopup(true);
-  };
+  }
   function handleEditProfileClick() {
     setEditProfilePopup(true);
-  };
+  }
   function handleAddPlaceClick() {
     setAddPlacePopup(true);
-  };
+  }
   function handleCardClick(card){
     setImagePopupOpen(true);
     setSelectedCard(card);
-  };
+  }
   function closeAllPopups(){
     setEditAvatarPopup(false);
     setEditProfilePopup(false);
     setAddPlacePopup(false);
     setImagePopupOpen(false);
     setSelectedCard({});
-  };
+  }
   function handleUpdateUser(name, about){
     api.editUserInfo(name, about)
     .then(userInfo => {
@@ -63,7 +66,7 @@ function App(props){
     .catch((err) => {
       console.log(err);
     });
-  };
+  }
   function handleUpdateAvatar(avatar) {
     api.editAvatar(avatar)
     .then(userInfo => {
@@ -73,10 +76,10 @@ function App(props){
     .catch((err) => {
       console.log(err);
     });
-  }; 
+  }
   function handleCardDelete(card) {
     api.deleteCard(card._id).then((deletedCard) => {
-      setCards(cards.filter((c) => c._id !== card._id));
+      setCards(cards => cards.filter((state) => state._id !== card._id));
     });
   } 
   function handleCardLike(card) {
@@ -88,13 +91,13 @@ function App(props){
   function handleAddPlaceSubmit(data) {
     api.postCard(data.name, data.link)
     .then(newCard => {
-      setCards([newCard, ...cards]);
+      setCards(cards => ([newCard, ...cards]));
       closeAllPopups();
   })
     .catch((err) => {
       console.log(err);
     });
-  }; 
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
