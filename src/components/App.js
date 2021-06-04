@@ -22,19 +22,14 @@ function App(props){
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    Promise.all([
-    api.getUserInfo()
-    .then(userInfo => setCurrentUser(userInfo))
-    .catch((err) => {
-      console.log(err);
-    }),
-    api.getInitialCards()
-    .then(cardsInfo => setCards([...cardsInfo]))
-    .catch((err) => {
-      console.log(err);
-    })]).catch((err) => {
-      console.log(err);
-    });
+    Promise.all([api.getUserInfo(),api.getInitialCards()])
+      .then(([userInfo, cardsInfo,]) => {
+        setCurrentUser(userInfo);
+        setCards([...cardsInfo]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [])
 
   function handleEditAvatarClick() {
@@ -80,13 +75,19 @@ function App(props){
   function handleCardDelete(card) {
     api.deleteCard(card._id).then((deletedCard) => {
       setCards(cards => cards.filter((state) => state._id !== card._id));
+    })
+    .catch((err) => {
+      console.log(err);
     });
   } 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+    })
+      .catch((err) => {
+        console.log(err);
+      });
   } 
   function handleAddPlaceSubmit(data) {
     api.postCard(data.name, data.link)
